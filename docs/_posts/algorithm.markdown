@@ -152,3 +152,55 @@ class AVLTree{
 
 }
 ```
+### 3. Longest Substring Without Repeating Characters    left-right pointer
+左右两个节点，判断右节点值是否在范围内，更新范围
+```
+int left = 0, right = 1;
+Arrays.fill(map, -1);
+map[chars[left]] = 0;
+if (map[chars[right]] >= left) left = map[chars[right]] + 1;
+```
+### 4. find the median of two sorted array               recursion shrink the range
+更宽泛的题目就是，查找kth值。线性算法是最简单的，但是要求log
+每次比较两个数组 k/2位置处的值，讲小于部分的范围去除掉
+### 5. find the longest palindromic substring            manacher(arm[]数组)
+1. brute force: search all substring(i,j)
+2. dynamic programming, the substring len from 1 to n, N square time complexity
+3. manacher algorithm  加入#，arm[],center+right+mirror,先取可以确定到的最大范围（math.min）然后在对称更新。
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+        StringBuilder sb = new StringBuilder("#");
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            sb.append("#");
+        }
+        int[] arm = new int[sb.length()];
+        int right = 2, center = 1;
+        for (int i = 2; i < sb.length(); i++) {
+            int mirror = 2*center-i;
+            if (right > i) {
+                arm[i] = Math.min(arm[mirror], right-i);
+            }
+            while (i-arm[i]-1>=0 && i+arm[i]+1 < sb.length() && sb.charAt(i-arm[i]-1) == sb.charAt(i+arm[i]+1)) {
+                arm[i]++;
+            }
+            if (right < i+arm[i]) {
+                center = i;
+                right = i+arm[i];
+            }
+        }
+    }
+}
+```
+### 3Sum closest
+1. Arrays.sort(nums);
+2. Arrays.binarySearch(nums, j+1, sz, complement); // if not found, return - (insertion) - 1
+   返回值为负数，～idx为数组插入位置，原本插入位置的值向后移动
+3. 
+
+### 214. shortest palindrome
+you can convert s to a palindrome by adding characters in front of it.
+换一句就是找到最长前缀palindrome，也可以使用manacher
+
+
